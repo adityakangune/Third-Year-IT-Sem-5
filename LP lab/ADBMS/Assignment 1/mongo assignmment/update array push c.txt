@@ -1,0 +1,10 @@
+db.books.findAndModify({ 
+   query:{author:"Cassandra Clare"}, 
+   update:{ 
+      $inc:{pages:10}, 
+      $push:{address:{"pin code":414003}} 
+   }    
+})
+
+
+save

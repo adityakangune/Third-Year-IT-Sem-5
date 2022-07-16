@@ -1,0 +1,16 @@
+ipc interprocess communication
+shmgt- retuern type is int
+shmctl-performing few control operstiond
+
+using ftop is optional, you can give it manually the same.common on both sides
+
+create>attach>detach>control
+
+writer is clien
+reader is swerver
+
+key is 65 here on gfg1024 is max size
+man and check what value to pass
+gets
+
+destroy-rmid - removeid

@@ -1,0 +1,11 @@
+-no sql
+-sample collection try to create
+-assume some attribute
+-atleast 5-10 records
+-Main crud operations=create, delete, etc
+-Generate report by data analysis(ML)
+-For front end you can use any libraries
+
+- Schema finalise
+in no sql database management system.
+Prsentation

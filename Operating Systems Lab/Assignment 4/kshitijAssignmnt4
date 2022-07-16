@@ -1,0 +1,200 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <math.h>
+#define BUF_SIZE 5
+
+//Counting semaphores
+sem_t empty,full;
+
+//for mutual exclusion
+sem_t S;
+
+//Mutex Lock
+pthread_mutex_t lock;
+
+//Thread functions for producer and consumer
+void *producer_fn(void *arg);
+void *consumer_fn(void *arg);
+
+//Buffer array
+int buffer[BUF_SIZE];
+
+//Current\ Indices
+int pidx,cidx;
+
+//Main function
+int main() {
+
+	int res,prod_count,cons_count,i;
+	int *loc;
+	
+	printf("Enter the number of producers: \n");
+	scanf("%d",&prod_count);
+	printf("Enter the number of consumers: \n");
+	scanf("%d",&cons_count);
+	
+	//Create threads
+	pthread_t producers[prod_count], consumers[cons_count];
+	
+	//Initialise semaphores
+	res=sem_init(&empty,0,BUF_SIZE);
+	if(res!=0)
+	{
+		printf("Eror in semaphore initialisation! \n");
+		exit(EXIT_FAILURE);
+	}
+	res=sem_init(&full,0,0);
+	if(res!=0)
+	{
+		printf("Eror in semaphore initialisation! \n");
+		exit(EXIT_FAILURE);
+	}
+	
+	//initially resources available so set to 1
+	res=sem_init(&S,0,1);
+	if(res!=0)
+	{
+		printf("Eror in semaphore initialisation! \n");
+		exit(EXIT_FAILURE);
+	}
+	
+	
+	//initialise mutex
+	//res=pthread_mutex_init(&lock,NULL);
+	//if(res!=0)
+	//{
+	//	printf("Eror in mutex initialisation! \n");
+	//	exit(EXIT_FAILURE);
+	//}
+	
+	pidx=0;
+	cidx=0;
+	
+	printf("producer threads are being created....\n");
+	for(i = 1; i <= prod_count; i++) {
+		printf("creating producer number %d \n",i);
+		//allocate memory
+		loc=(int *) malloc(sizeof(int));
+		//associate value at memory
+		*loc=i;
+		//create thread
+		res = pthread_create(&producers[i], NULL, producer_fn,
+		loc);
+		if (res != 0) {
+			perror("Error in thread creation!");
+			exit(EXIT_FAILURE);
+		}
+		
+	}
+	
+	printf("consumer threads are being created....\n");
+	for(i = 1; i <= cons_count; i++) {
+		printf("creating consumer number %d \n",i);
+		//allocate memory
+		loc=(int *) malloc(sizeof(int));
+		//associate value at memory
+		*loc=i;
+		//create thread
+		res = pthread_create(&consumers[i], NULL, consumer_fn,
+		loc);
+		if (res != 0) {
+			perror("Error in thread creation!");
+			exit(EXIT_FAILURE);
+		}		
+	}
+	
+	
+	for(int i=0;i<prod_count;i++){
+		res = pthread_join(producers[i],NULL);
+		if(res!=0){
+		    printf("Error in thread join: \n");
+		    exit(EXIT_FAILURE);
+		}
+    	}
+
+
+
+    	for(int i=0;i<cons_count;i++){
+		res = pthread_join(consumers[i],NULL);
+		if(res!=0){
+		    printf("Error in thread join: \n");
+		    exit(EXIT_FAILURE);
+		}
+    	}	
+
+
+
+
+
+	//pthread_mutex_destroy(&lock);
+	sem_destroy(&S);
+	sem_destroy(&empty);
+	sem_destroy(&full);
+
+	return 0;
+	
+}
+void *producer_fn(void *arg) {
+	int *my_number = (int*) arg;
+	while(1){
+		int i;
+		//int rand_num=rand();
+		//sleep for random time...this ensure async behavior
+		//sleep(rand_num);
+		//locks the semaphore,decrements value
+		sem_wait(&empty);
+		//lock the mutex
+		//pthread_mutex_lock(&lock);
+		sem_wait(&S);
+		//now critical section starts
+		printf("in producer %d \n",*my_number);
+		//store in buffer
+		buffer[pidx]=*my_number;
+		//print buffer
+		for(int i=0;i<BUF_SIZE;i++)
+			printf(" %d ",buffer[i]);
+		printf("\n");
+		//update index
+		pidx=(pidx+1)%BUF_SIZE;
+		printf("exited from producer %d \n",*my_number);
+		//unlock the mutex
+		//pthread_mutex_unlock(&lock);
+		sem_post(&S);
+		//locks the semaphore,increments value
+		sem_post(&full);
+	}
+}
+
+void *consumer_fn(void *arg) {
+	int *my_number = (int*) arg;
+	while(1){
+		int i;
+		//int rand_num=rand();
+		//sleep for random time...this ensure async behavior
+		//sleep(rand_num);
+		//locks the semaphore,decrements value
+		sem_wait(&full);
+		//lock the mutex
+		//pthread_mutex_lock(&lock);
+		sem_wait(&S);
+		//now critical section starts
+		printf("in consumer %d \n",*my_number);
+		//consume from buffer
+		buffer[cidx]=0;
+		//print buffer
+		for(int i=0;i<BUF_SIZE;i++)
+			printf(" %d ",buffer[i]);
+		printf("\n");
+		//update index
+		cidx=(cidx+1)%BUF_SIZE;
+		printf("exited from consumer %d \n",*my_number);
+		//unlock the mutex
+		//pthread_mutex_unlock(&lock);
+		sem_post(&S);
+		//locks the semaphore,increments value
+		sem_post(&empty);
+	}
+}
