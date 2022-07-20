@@ -1,0 +1,52 @@
+SElf driving- A convolutional neural network (CNN) 
+is a type of artificial neural network used in image recognition 
+and processing that is specifically designed to process pixel data.
+
+CNNs are powerful image processing, artificial intelligence (AI) 
+that use deep learning to perform both generative and descriptive tasks,
+ often using machine vison that includes image and video recognition, 
+along with recommender systems and natural language processing (NLP).
+
+Tesla in May started delivering Model 3 and Model Y 
+with a driver-assist system based on eight cameras 
+mounted around the car and with no radar. 
+The cameras, like eyes, send images to computer networks,
+ like the brain, which recognize and analyse objects.
+
+In May 2016,
+ a Tesla car crashed,
+ killing the driver,
+ when Autopilot failed to detect a white semi-truck crossing in front of it.
+
+
+
+We trained a convolutional neural network (CNN) to map raw pixels
+ from a single front-facing camera directly to steering commands. 
+This end-to-end approach
+proved surprisingly powerful.
+ With minimum training data from humans the system learns 
+to drive in traffic on local roads with or without lane markings and on
+highways. It also operates in areas with unclear visual guidance such as in parking
+lots and on unpaved roads.
+The system automatically learns internal representations
+ of the necessary processing steps such as detecting
+ useful road features with only the human steering angle
+as the training signal. We never explicitly trained it to detect, 
+for example, the outline of roads.
+Compared to explicit decomposition of the problem, 
+such as lane marking detection, path planning, and control,
+ our end-to-end system optimizes all processing
+steps simultaneously. We argue that this will eventually 
+lead to better performance and smaller systems.
+ Better performance will result because the internal
+components self-optimize to maximize overall system performance, 
+instead of optimizing human-selected intermediate criteria
+, e. g., lane detection. Such criteria
+understandably are selected for ease of human interpretation 
+which doesn’t automatically guarantee maximum system performance. 
+Smaller networks are possible because the system learns to solve 
+the problem with the minimal number of
+processing steps.
+We used an NVIDIA DevBox and Torch 7 for training and an NVIDIA
+DRIVETM PX self-driving car computer also running Torch 7 for determining
+where to drive. The system operates at 30 frames per second (FPS).

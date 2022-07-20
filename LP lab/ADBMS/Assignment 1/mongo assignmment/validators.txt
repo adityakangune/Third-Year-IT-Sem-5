@@ -1,0 +1,33 @@
+db.createCollection("Books1", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: [ "name", "author", "price", "pages" ],
+         properties: {
+            name: {
+               bsonType: "string",
+               description: "must be a string and is required"
+            },
+            author: {
+		bsonType: "string",
+               description: "must be a string and is required"
+            },
+            pages: {
+               bsonType: "int",
+               minimum: 50,
+               maximum: 1000,
+               description: "must be an integer in [ 50, 1000 ] and is required"
+            },
+            price: {
+               bsonType: "int",
+               minimum: 0,
+               
+               description: "must be an integer greater than 0 and is required"
+            },
+            
+               }
+            }
+         }
+      }
+   }
+})

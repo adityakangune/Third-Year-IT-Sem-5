@@ -1,0 +1,12 @@
+1) End to End Learning for Self-Driving Cars
+-Application based on algorithm
+-Cornell University
+
+2) Genie: A Generator of Natural Language Semantic Parsers for Virtual Assistant Commands
+-acm
+-Genie toolkit
+
+3) An Overview of Chatbot Technology
+- Springer
+-IFIP International Conference on Artificial Intelligence Applications and Innovations
+-Artificial Intelligence Applications and Innovations

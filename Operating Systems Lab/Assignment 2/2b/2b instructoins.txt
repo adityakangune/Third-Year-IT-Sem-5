@@ -1,0 +1,12 @@
+normal fork system call- we create duplicate copies of child and parent
+exec- child overrides the parent process
+
+binay.c is child file
+current file is parent
+
+1) compile binary(child) first - search
+2) Compile and execute parent(p_exec.c) - sort
+
+
+
+study exec and vfork

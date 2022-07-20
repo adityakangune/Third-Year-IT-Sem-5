@@ -1,0 +1,29 @@
+summary
+takewaway
+limits
+advantages
+literatue survey - future scope
+chart with paper number- 
+how to will imporve in BE poject
+limitations of alredy existing systems- how will you overcome those.
+
+Chapter 4 - How will you achieve objective?, What method are you going to use?
+design, aalgorithms, comparison of two algo with detailed study and how they work
+if you are copying any picture form some other paper give citation
+
+
+
+Conclusion-
+first read your abstract, check if yyou covered all things that you said
+
+15% plagrism is allowed
+
+6 chapetrs + 1 plagarism check report
+LaTeX - A document preparation system
+
+first two chapters in this week
+
+i will - during this seminar
+reference on ieee format
+slidecnumber
+remove extra bullets

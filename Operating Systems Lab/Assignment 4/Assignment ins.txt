@@ -1,0 +1,5 @@
+2 files-
+single producer consumer
+multiple prod and consu alongwith buffer handling
+
+print thread id for producer and consumer   

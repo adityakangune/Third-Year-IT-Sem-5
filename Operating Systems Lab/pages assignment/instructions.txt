@@ -1,0 +1,2 @@
+switch case;
+lru, fifo, optimal as options

@@ -1,0 +1,1 @@
+if we initialise all sema with same init state as 1, then they are binary semaphores

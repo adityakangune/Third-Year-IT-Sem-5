@@ -1,0 +1,283 @@
+#include <stdio.h>
+
+#define PROCESSES 50
+#define RESOURCES 50
+
+
+int max[PROCESSES][RESOURCES], 
+    allocate[PROCESSES][RESOURCES], 
+    need[PROCESSES][RESOURCES],
+    available[RESOURCES], 
+    work[RESOURCES], 
+    safeSequence[PROCESSES],
+    completed[PROCESSES];
+
+//function to print all matrices
+void printData(int n, int m)
+{
+    int i, j;
+    printf("\nMax Matrix : \n");
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < m; j++)
+        {
+            printf("%d \t", max[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nAllocate Matrix : \n");
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < m; j++)
+        {
+            printf("%d \t", allocate[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nAvailability Matrix : \n");
+    for(i = 0; i < m; i++)
+    {
+        printf("%d \t", available[i]);
+    }
+}
+
+void scheduleProcess(int p, int r)
+{
+
+    int work[r];
+    int i, j, index = 0, u = 0, k = 0;
+    int needFlag = 0;	//0 if available>need, 1 if need>available
+
+    
+    for(i = 0; i < r; i++)
+    {
+        work[i] = available[i];			// Copy availibility matrix into work matrix
+    }
+
+    for(k = 0; k < p; k++)
+    {
+        for(i = 0; i < p; i++)
+        {
+            if (completed[i] == 0)
+            {               
+                needFlag = 0;
+                for(j = 0; j < r; j++)
+                {
+                    if (need[i][j] > work[j]) 
+                    {
+                        needFlag = 1;		//need>available
+                        break;
+                    }
+                }
+                
+                
+                //If need<available, allocate resources
+                if (needFlag == 0)
+                {
+                    safeSequence[index++] = (i + 1);
+                    completed[i] = 1;
+                    for(u = 0; u < r; u++)
+                    {
+                        work[u] += allocate[i][u];
+                    }
+                }
+            }
+        }
+    }
+}
+
+//function to calculate need matrix 
+void calcNeed(int p, int r)
+{
+    int i, j;
+    for(i = 0; i < p; i++)
+    {
+        for(j = 0; j < r; j++)
+        {
+            need[i][j] = max[i][j] - allocate[i][j];	//need=max-allocated
+        }
+    }   
+
+    printf("\n\nNeed Matrix : \n");
+    for(i = 0; i < p; i++)
+    {
+        for(j = 0; j < r; j++)
+        {
+            printf("%d \t", need[i][j]);
+        }
+        printf("\n");
+    }
+
+}
+
+//Check if any element of completed array is 0 or not
+int check(int p, int r)
+{
+    int i;
+    for (i = 0; i < p; i++)
+    {
+        if (completed[i]==0)
+        {
+            return 0;			//not safe if any element of completed array is 0
+        }
+    }
+    return 1;
+}
+
+
+//function to get data of all matrices
+void getData(int n, int m)
+{
+    int i, j;
+    
+    printf("\n\nEnter Max Matrix : \n");
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < m; j++)
+        {
+            printf("\nProcess %d Resource %d : ", i, j);
+            scanf("%d", &max[i][j]);
+        }
+    }
+    
+    printf("\n\nEnter allocation Matrix : \n");
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < m; j++)
+        {
+            printf("\nProcess %d Resource %d : ", i, j);
+            scanf("%d", &allocate[i][j]);
+        }
+    }
+    
+    printf("\n\nEnter Availability matrix : \n");
+    for(i = 0; i < m; i++)
+    {
+        printf("\nResource %d : ", i);
+        scanf("%d", &available[i]);
+    }
+	
+	
+	//set all elements of completed array to 0 initially
+    for(i = 0; i < n; i++)
+    {
+        completed[i] = 0;
+    }
+}
+
+
+//Resource Request Algorithm
+int resourceRequest(int p, int r)
+{    
+    printf("\n\nRequesting Resources\n\n");
+    int i = 0, process, resReq[r];
+    
+    // Get Process number and requested resources 
+    printf("\nEnter Process Number : ");
+    scanf("%d", &process);
+    printf("\nEnter requests : \n");
+    for(i = 0; i < r; i++)
+    {
+        printf("\nRequest for process %d : ", i);
+        scanf("%d", &resReq[i]);
+    }
+
+	
+	//If request>need return 0 else update need matrix by subtracting resource request
+    for(i = 0; i < r; i++)
+    {    	
+        if (resReq[i] > need[process][i])
+        {
+            printf("Resource %d Request is more than the Need for Process %d", i, process);
+            return 0;
+        }
+        
+        else
+        {
+            need[process][i] -= resReq[i];
+        }
+    }
+
+    //If request>available return 0 else update available matrix by subtracting resource request
+    for(i = 0; i < r; i++)
+    {
+        if (resReq[i] > available[i])
+        {
+            printf("Resource %d Request is more than availibility for Process %d", i, process);
+            return 0;
+        }
+        else
+        {
+            available[i] -= resReq[i];
+        }
+    }
+
+    // Update allocation matrix
+    for(i = 0; i < r; i++)
+    {
+        allocate[process][i] += resReq[i];
+    }
+
+    // Schedule processes for given request
+    scheduleProcess(p, r);
+    printData(p, r);
+    return (check(p, r));
+}
+
+//function to print safety sequence
+void printSafeSeq(int p)
+{
+
+    int i;
+    for(i = 0; i < p; i++)
+    {
+        printf("%d -> ", safeSequence[i]);
+    }
+
+}
+
+
+int main()
+{
+    int proNum, resNum;
+    printf("Banker's Algorithm");
+    printf("\nEnter number of processes : ");
+    scanf("%d", &proNum);
+    printf("\nEnter number of resources : ");
+    scanf("%d", &resNum);
+
+    // Get and display the matrix data
+    getData(proNum, resNum);
+    printData(proNum, resNum);
+
+    // Calculate need matrix.
+    calcNeed(proNum, resNum);
+
+    // Schedule process
+    scheduleProcess(proNum, resNum);
+
+    // Check whether the given situation is safe
+    if (check(proNum, resNum))
+    {
+        printf("\nSafe Sequence: ");
+        printSafeSeq(proNum);
+        // Resource request algorithm
+        if (resourceRequest(proNum, resNum))
+        {
+            printf("\nREQUEST GRANTED!\n");
+            printf("\nSafe sequence: ");
+            printSafeSeq(proNum);
+        }
+        else
+        {
+            printf("\nNOT GRANTED!\n");
+        }
+    }
+    else
+    {
+        printf("\nDeadlock!\n");
+    }
+    return 0;
+}

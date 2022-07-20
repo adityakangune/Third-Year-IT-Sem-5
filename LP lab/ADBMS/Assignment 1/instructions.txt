@@ -1,0 +1,13 @@
+head tail
+shape
+unique values nd their count
+describe numerical and categorical values
+find independant and dependant vairable
+train test spilt
+datatypes each col
+noof row and column
+describe info
+drop unnamed column
+
+
+predict AHD based on age and xhest pain

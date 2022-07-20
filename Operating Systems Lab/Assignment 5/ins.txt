@@ -1,0 +1,4 @@
+resources  > 4, 5
+
+two exaples- one with deadlock, one with updated safe sequence
+in one pdf

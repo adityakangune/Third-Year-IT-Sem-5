@@ -1,0 +1,11 @@
+db.createCollection("teachers")
+
+db.teachers.insert({"name": "Aditya K","author":"JK Rowling"});
+
+db.teachers.insert({ id:123456789, name:"Harry Potter", dept:"IT", salary:80000, details:{city:"Pune", contact:9898678678});
+
+db.teachers.find({salary:{$gt:90000}});
+
+db.teachers.find().sort({salary:1}).pretty();
+
+db.teachers.update({dept:"IT"}, {%inc:{salary:999}});
